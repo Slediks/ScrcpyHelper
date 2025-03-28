@@ -58,10 +58,31 @@ public static class DeviceWorker
         return outputArray;
     }
 
+    public static async Task Run(string args)
+    {
+        Console.Clear();
+        try
+        {
+            using System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+            pProcess.StartInfo.FileName = @"..\scrcpy.exe";
+            pProcess.StartInfo.Arguments = args; //argument
+            pProcess.StartInfo.UseShellExecute = false;
+            pProcess.StartInfo.RedirectStandardOutput = false;
+            pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            pProcess.StartInfo.CreateNoWindow = false; //not display a windows
+            pProcess.Start();
+            await pProcess.WaitForExitAsync();
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+
     private static string GetOutput(string arg)
     {
         using System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
-        pProcess.StartInfo.FileName = @"E:\UseFul Progs\scrcpy-win64-v3.1\scrcpy.exe";
+        pProcess.StartInfo.FileName = @"..\scrcpy.exe";
         pProcess.StartInfo.Arguments = arg; //argument
         pProcess.StartInfo.UseShellExecute = false;
         pProcess.StartInfo.RedirectStandardOutput = true;

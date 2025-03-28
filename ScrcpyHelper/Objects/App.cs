@@ -3,10 +3,13 @@ using ScrcpyHelper.Helpers;
 
 namespace ScrcpyHelper.Objects;
 
-public class App : IProperties
+public class App : Properties
 {
-    private string Name { get; set; } = string.Empty;
+    private int Name { get; set; }
     public bool Save { get; set; } = true;
+
+    private string GetNameString() => $"Название: {GetName()}";
+    private string GetSaveString() => $"Сохранить: {(Save ? "Да" : "Нет")}";
 
     private static readonly List<string> Names = [];
 
@@ -25,33 +28,57 @@ public class App : IProperties
 
     public void SetName()
     {
-        Name = Names[ConsoleWorker.WriteListAndReadNumber("Список доступных приложений:", NamesDesc.ToArray())];
+        Name = ConsoleWorker.WriteListAndReadNumber("Список доступных приложений:", NamesDesc.ToArray());
     }
 
     public string GetName()
     {
-        return NamesDesc[Names.IndexOf(Name)];
+        return NamesDesc[Name];
     }
 
     public string GetRealName()
     {
-        return Name;
+        return Names[Name];
+    }
+
+    public override void ChangeProps()
+    {
+        while (true)
+        {
+            List<string> props = [];
+            props.Add($"{GetNameString()} {Changeable}");
+            props.Add($"{GetSaveString()} {Changeable}");
+
+
+            var result = ConsoleWorker.WriteListAndRead2Args(props.ToArray());
+            switch (result.Item1)
+            {
+                case 0:
+                    return;
+                case 1:
+                    SetName();
+                    break;
+                case 2:
+                    Save = !Save;
+                    break;
+            }
+        }
     }
 
     public override string ToString()
     {
         return new StringBuilder()
-            .AppendLine($"Название: {GetName()}")
-            .Append($"Сохранить: {(Save ? "Да" : "Нет")}")
+            .AppendLine(GetNameString())
+            .Append(GetSaveString())
             .ToString();
     }
 
-    public string GetProperties()
+    public override string GetProperties()
     {
         List<string> strings = [];
-        strings.Add($"--start-app={Name}");
+        strings.Add($"--start-app={GetRealName()}");
         if (Save) strings.Add("--no-vd-destroy-content");
-        
+
         var sb = new StringBuilder();
         sb.AppendJoin(' ', strings);
 
