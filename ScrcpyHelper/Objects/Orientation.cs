@@ -35,7 +35,8 @@ public class Orientation : IProperties
     public string GetProperties()
     {
         List<string> strings = [];
-        strings.Add($"--orientation={(Flip ? "flip" : "")}{GetRotate()}");
+        if (Rotate != RotationDegrees.Zero || Flip)
+            strings.Add($"--orientation={(Flip ? "flip" : "")}{GetRotate()}");
         
         var sb = new StringBuilder();
         sb.AppendJoin(' ', strings);

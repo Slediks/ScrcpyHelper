@@ -54,8 +54,14 @@ public class Video : IProperties
     public string GetProperties()
     {
         List<string> strings = [];
-        strings.Add(Source.GetProperties());
-        strings.Add(Orientation.GetProperties());
+        
+        var srcProps = Source.GetProperties();
+        if (srcProps != string.Empty)
+            strings.Add(srcProps);
+        
+        var oriProps = Orientation.GetProperties();
+        if (oriProps != string.Empty)
+            strings.Add(oriProps);
         
         var sb = new StringBuilder();
         sb.AppendJoin(' ', strings);

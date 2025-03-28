@@ -59,12 +59,18 @@ public class Window : IProperties
     public string GetProperties()
     {
         List<string> strings = [];
-        strings.Add($"--window-title={Title}");
+        strings.Add($"--window-title='{Title}'");
         if (!IsBorder) strings.Add("--window-borderless");
         if (IsAlwaysOnTop) strings.Add("--always-on-top");
         if (IsFullScreen) strings.Add("--fullscreen");
-        strings.Add($"{(Video != null ? Video.GetProperties() : "--no-video")}");
-        strings.Add($"{(Audio != null ? Audio.GetProperties() : "--no-audio")}");
+        
+        var videoProps = Video != null ? Video.GetProperties() : "--no-video";
+        if (videoProps != string.Empty)
+            strings.Add(videoProps);
+        
+        var audioProps = Audio != null ? Audio.GetProperties() : "--no-audio";
+        if (audioProps != string.Empty)
+            strings.Add(audioProps);
         
         var sb = new StringBuilder();
         sb.AppendJoin(' ', strings);

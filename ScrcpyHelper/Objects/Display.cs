@@ -55,7 +55,13 @@ public class Display : IProperties
         if (NewDisplay != null) strings.Add($"--new-display={NewDisplay.GetProperties()}");
         if (IsScreenOff) strings.Add("--turn-screen-off");
         if (!IsControl) strings.Add("--no-control");
-        if (App != null) strings.Add(App.GetProperties());
+        
+        if (App != null)
+        {
+            var appProps = App.GetProperties();
+            if (appProps != string.Empty)
+                strings.Add(appProps);
+        }
         
         var sb = new StringBuilder();
         sb.AppendJoin(' ', strings);
